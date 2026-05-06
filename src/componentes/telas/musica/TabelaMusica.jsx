@@ -37,7 +37,7 @@ function TabelaMusica() {
                         {listaObjetos.map((objeto) => (
                             <tr key={objeto.id_musica}>
                                 <td align="center">
-                                    <Button variant="info" onClick={() => editarObjeto(objeto.codigo)}>
+                                    <Button onClick={() => editarObjeto(objeto.id_musica)}>
                                         <i className="bi bi-pencil-square"></i>
                                     </Button>
                                     <Button variant="danger" onClick={() => remover(objeto.id_musica)}>

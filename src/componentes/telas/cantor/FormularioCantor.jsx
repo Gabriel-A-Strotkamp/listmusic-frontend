@@ -12,7 +12,6 @@ import Row from 'react-bootstrap/Row';
 function FormCantor() {
 
     const { objeto, handleChange, acaoCadastrar, alerta, exibirForm, setExibirForm } = useContext(CantorContext);
-
     return (
         <Modal show={exibirForm} onHide={() => setExibirForm(false)}>
             <Modal.Header closeButton>

@@ -45,10 +45,26 @@ function Gravadora() {
     }
 
     const editarObjeto = async id => {
-        setObjeto(await getGravadoraPorIdAPI(id));
+    try {
+        const resposta = await getGravadoraPorIdAPI(id);
+
+        const dados = resposta?.objeto || resposta?.[0] || resposta;
+
+        if (!dados) return;
+
+        setObjeto({
+            id_gravadora: dados.id_gravadora || 0,
+            nome: dados.nome || "",
+            pais: dados.pais || ""
+        });
+
         setEditar(true);
         setExibirForm(true);
+
+    } catch (erro) {
+        console.error("Erro ao editar gravadora:", erro);
     }
+};
 
     const acaoCadastrar = async e => {
         e.preventDefault();

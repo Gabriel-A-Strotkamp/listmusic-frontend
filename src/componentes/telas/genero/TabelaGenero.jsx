@@ -31,7 +31,7 @@ function TabelaGenero() {
                         {listaObjetos.map((objeto) => (
                             <tr key={objeto.id_genero}>
                                 <td align="center">
-                                    <Button variant="info" onClick={() => editarObjeto(objeto.codigo)}>
+                                    <Button onClick={() => editarObjeto(objeto.id_genero)}>
                                         <i className="bi bi-pencil-square"></i>
                                     </Button>
                                     <Button variant="danger" onClick={() => remover(objeto.id_genero)}>

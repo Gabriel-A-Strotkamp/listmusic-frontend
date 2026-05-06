@@ -13,7 +13,7 @@ export const getCantorPorIdAPI = async id => {
         headers: { "Content-Type": "application/json" }
     });
     const data = await response.json();
-    return data;
+    return data; 
 }
 
 export const deleteCantorPorIdAPI = async id => {

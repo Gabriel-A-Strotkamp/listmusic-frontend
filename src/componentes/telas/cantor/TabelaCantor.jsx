@@ -33,7 +33,7 @@ function TabelaCantor() {
                         {listaObjetos.map((objeto) => (
                             <tr key={objeto.id_cantor}>
                                 <td align="center">
-                                    <Button variant="info" onClick={() => editarObjeto(objeto.codigo)}>
+                                    <Button variant="info" onClick={() => editarObjeto(objeto.id_cantor)}>
                                         <i className="bi bi-pencil-square"></i>
                                     </Button>
                                     <Button variant="danger" onClick={() => remover(objeto.id_cantor)}>

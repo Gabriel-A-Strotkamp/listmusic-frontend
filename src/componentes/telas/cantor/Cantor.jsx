@@ -50,10 +50,27 @@ function Cantor() {
     }
 
     const editarObjeto = async id => {
-        setObjeto(await getCantorPorIdAPI(id));
+    try {
+        const resposta = await getCantorPorIdAPI(id);
+
+        const dados = resposta?.objeto || resposta?.[0] || resposta;
+
+        if (!dados) return;
+
+        setObjeto({
+            id_cantor: dados.id_cantor || 0,
+            nome: dados.nome || "",
+            data_nascimento: dados.data_nascimento || "",
+            nacionalidade: dados.nacionalidade || ""
+        });
+
         setEditar(true);
         setExibirForm(true);
+
+    } catch (erro) {
+        console.error("Erro ao editar cantor:", erro);
     }
+};
 
     const acaoCadastrar = async e => {
         e.preventDefault();

@@ -11,15 +11,15 @@ import Tabela from './TabelaGenero';
 
 function Genero() {
 
-      const [alerta, setAlerta] = useState({ status: "", message: "" });
+    const [alerta, setAlerta] = useState({ status: "", message: "" });
     const [listaObjetos, setListaObjetos] = useState([]);
 
     const [editar, setEditar] = useState(false);
     const [exibirForm, setExibirForm] = useState(false);
 
     const [objeto, setObjeto] = useState({
-    id_genero: "",
-    descricao: ""
+        id_genero: "",
+        descricao: ""
     });
 
     const recuperaGeneros = async () => {
@@ -44,10 +44,25 @@ function Genero() {
     }
 
     const editarObjeto = async id => {
-        setObjeto(await getGeneroPorIdAPI(id));
-        setEditar(true);
-        setExibirForm(true);
-    }
+        try {
+            const resposta = await getGeneroPorIdAPI(id);
+
+            const dados = resposta?.objeto || resposta?.[0] || resposta;
+
+            if (!dados) return;
+
+            setObjeto({
+                id_genero: dados.id_genero || 0,
+                nome: dados.nome || ""
+            });
+
+            setEditar(true);
+            setExibirForm(true);
+
+        } catch (erro) {
+            console.error("Erro ao editar gênero:", erro);
+        }
+    };
 
     const acaoCadastrar = async e => {
         e.preventDefault();
@@ -77,8 +92,8 @@ function Genero() {
             novoObjeto, exibirForm, editar,
             setExibirForm
         }}>
-        <Formulario/>
-        <Tabela/>
+            <Formulario />
+            <Tabela />
         </GeneroContext.Provider>
     );
 }
