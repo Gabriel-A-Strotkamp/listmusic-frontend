@@ -6,13 +6,13 @@ import { Button } from 'react-bootstrap';
 
 function TabelaCantor() {
 
-    const { alerta, listaObjetos, remover } = useContext(CantorContext);
+    const { alerta, listaObjetos, remover, novoObjeto, editarObjeto } = useContext(CantorContext);
 
     return (
         <div style={{ padding: '20px' }}>
             <h1>Cantores</h1>
             <Alerta alerta={alerta} />
-            <Button variant="primary">
+            <Button variant="primary" onClick={() => novoObjeto()}>
                 Novo <i className="bi bi-file-earmark-plus"></i>
             </Button>
 
@@ -33,7 +33,7 @@ function TabelaCantor() {
                         {listaObjetos.map((objeto) => (
                             <tr key={objeto.id_cantor}>
                                 <td align="center">
-                                    <Button variant="info">
+                                    <Button variant="info" onClick={() => editarObjeto(objeto.codigo)}>
                                         <i className="bi bi-pencil-square"></i>
                                     </Button>
                                     <Button variant="danger" onClick={() => remover(objeto.id_cantor)}>

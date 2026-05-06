@@ -1,22 +1,22 @@
 import { useContext } from 'react'
-import GravadoraContext from './GravadoraContext';
+import MusicaContext from './MusicaContext';
 import Alerta from '../../comuns/Alerta';
 import Table from 'react-bootstrap/Table';
 import { Button } from 'react-bootstrap';
 
-function TabelaGravadora() {
+function TabelaMusica() {
 
-    const { alerta, listaObjetos, remover } = useContext(GravadoraContext);
+    const { alerta, listaObjetos, remover, novoObjeto, editarObjeto } = useContext(MusicaContext);
 
     return (
         <div style={{ padding: '20px' }}>
-            <h1>Gravadoras</h1>
+            <h1>Músicas</h1>
             <Alerta alerta={alerta} />
-            <Button variant="primary">
+            <Button variant="primary" onClick={() => novoObjeto()}>
                 Novo <i className="bi bi-file-earmark-plus"></i>
             </Button>
 
-            {listaObjetos.length === 0 && <h1>Nenhuma gravadora encontrada</h1>}
+            {listaObjetos.length === 0 && <h1>Nenhuma música encontrada</h1>}
 
             {listaObjetos.length > 0 && (
                 <Table striped bordered hover responsive>
@@ -25,23 +25,33 @@ function TabelaGravadora() {
                             <th style={{ textAlign: 'center' }}>Ações</th>
                             <th>ID</th>
                             <th>Nome</th>
-                            <th>País</th>
+                            <th>Álbum</th>
+                            <th>Ano</th>
+                            <th>Duração</th>
+                            <th>Cantor</th>
+                            <th>Gênero</th>
+                            <th>Gravadora</th>
                         </tr>
                     </thead>
                     <tbody>
                         {listaObjetos.map((objeto) => (
-                            <tr key={objeto.id_gravadora}>
+                            <tr key={objeto.id_musica}>
                                 <td align="center">
-                                    <Button variant="info">
+                                    <Button variant="info" onClick={() => editarObjeto(objeto.codigo)}>
                                         <i className="bi bi-pencil-square"></i>
                                     </Button>
-                                    <Button variant="danger" onClick={() => remover(objeto.id_gravadora)}>
+                                    <Button variant="danger" onClick={() => remover(objeto.id_musica)}>
                                         <i className="bi bi-trash"></i>
                                     </Button>
                                 </td>
-                                <td>{objeto.id_gravadora}</td>
+                                <td>{objeto.id_musica}</td>
                                 <td>{objeto.nome}</td>
-                                <td>{objeto.pais}</td>
+                                <td>{objeto.album}</td>
+                                <td>{objeto.ano}</td>
+                                <td>{objeto.duracao}</td>
+                                <td>{objeto.cantor}</td>
+                                <td>{objeto.genero}</td>
+                                <td>{objeto.gravadora}</td>
                             </tr>
                         ))}
                     </tbody>
@@ -51,4 +61,4 @@ function TabelaGravadora() {
     )
 }
 
-export default TabelaGravadora;
+export default TabelaMusica;

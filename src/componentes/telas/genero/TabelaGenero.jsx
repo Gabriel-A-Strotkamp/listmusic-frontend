@@ -6,13 +6,13 @@ import { Button } from 'react-bootstrap';
 
 function TabelaGenero() {
 
-    const { alerta, listaObjetos, remover } = useContext(GeneroContext);
+    const { alerta, listaObjetos, remover, novoObjeto, editarObjeto } = useContext(GeneroContext);
 
     return (
         <div style={{ padding: '20px' }}>
             <h1>Gêneros</h1>
             <Alerta alerta={alerta} />
-            <Button variant="primary">
+            <Button variant="primary" onClick={() => novoObjeto()}>
                 Novo <i className="bi bi-file-earmark-plus"></i>
             </Button>
 
@@ -31,7 +31,7 @@ function TabelaGenero() {
                         {listaObjetos.map((objeto) => (
                             <tr key={objeto.id_genero}>
                                 <td align="center">
-                                    <Button variant="info">
+                                    <Button variant="info" onClick={() => editarObjeto(objeto.codigo)}>
                                         <i className="bi bi-pencil-square"></i>
                                     </Button>
                                     <Button variant="danger" onClick={() => remover(objeto.id_genero)}>

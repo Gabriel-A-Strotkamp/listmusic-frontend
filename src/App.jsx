@@ -10,10 +10,10 @@ import Home from './componentes/telas/Home'
 import Sobre from "./componentes/telas/Sobre";
 
 // CRUD do projeto
-import Cantor from "./componentes/telas/cantores/Cantor";
-import Genero from "./componentes/telas/generos/Genero";
-import Gravadora from "./componentes/telas/gravadoras/Gravadora";
-import Musica from "./componentes/telas/musicas/Musica";
+import Cantor from "./componentes/telas/cantor/Cantor";
+import Genero from "./componentes/telas/genero/Genero";
+import Gravadora from "./componentes/telas/gravadora/Gravadora";
+import Musica from "./componentes/telas/musica/Musica";
 
 const router = createBrowserRouter([
   {
@@ -23,10 +23,6 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Home />,
-      },
-      {
-        path: "/sobre",
-        element: <Sobre />,
       },
       {
         path: "/cantores",
@@ -43,6 +39,10 @@ const router = createBrowserRouter([
       {
         path: "/musicas",
         element: <Musica />,
+      },
+      {
+        path: "/sobre",
+        element: <Sobre />,
       }
     ]
   }
