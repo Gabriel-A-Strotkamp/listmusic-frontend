@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import GravadoraContext from './GravadoraContext';
 import Formulario from './FormularioGravadora';
+import WithAuth from "../../../seguranca/WithAuth";
+
 import {
     getGravadorasAPI,
     getGravadoraPorIdAPI,
@@ -100,4 +102,4 @@ function Gravadora() {
     );
 }
 
-export default Gravadora;
+export default WithAuth(Gravadora);

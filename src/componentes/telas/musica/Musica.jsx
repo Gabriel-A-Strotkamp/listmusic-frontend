@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import MusicaContext from './MusicaContext';
 import FormMusica from './FormularioMusica';
 import Tabela from './TabelaMusica';
+import WithAuth from "../../../seguranca/WithAuth";
 
 // Serviços da própria entidade
 import {
@@ -185,4 +186,4 @@ function Musica() {
     );
 }
 
-export default Musica;
+export default WithAuth(Musica);

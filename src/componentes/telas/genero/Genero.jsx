@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import GeneroContext from './GeneroContext';
 import Formulario from './FormularioGenero';
+import WithAuth from "../../../seguranca/WithAuth";
+
 import {
     getGenerosAPI,
     getGeneroPorIdAPI,
@@ -98,4 +100,4 @@ function Genero() {
     );
 }
 
-export default Genero;
+export default WithAuth(Genero);

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import CantorContext from './CantorContext';
 import TabelaCantor from './TabelaCantor';
 import FormCantor from './FormularioCantor';
+import WithAuth from "../../../seguranca/WithAuth";
 
 
 import {
@@ -105,4 +106,4 @@ function Cantor() {
     );
 }
 
-export default Cantor;
+export default WithAuth(Cantor);

@@ -5,7 +5,8 @@ import 'bootstrap/dist/js/bootstrap.min.js'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 
 // Componentes base
-import Menu from './componentes/Menu'
+import MenuPublico from './componentes/MenuPublico';
+import MenuPrivado from './componentes/MenuPrivado'
 import Home from './componentes/telas/Home'
 import Sobre from "./componentes/telas/Sobre";
 
@@ -17,8 +18,26 @@ import Musica from "./componentes/telas/musica/Musica";
 
 const router = createBrowserRouter([
   {
-    path: "/",
-    element: <Menu />,
+    path : "/",
+    element : <MenuPublico/>,
+    children : [
+      {
+        index : true,
+        element : <Home/>
+      },
+      {
+        path : "/sobre",
+        element : <Sobre/>
+      }	,  
+      {
+        path : "login",
+        element :  <Login/>
+      }              
+    ]
+  },
+  {
+    path: "/Privado",
+    element: <MenuPrivado />,
     children: [
       {
         index: true,
@@ -39,10 +58,6 @@ const router = createBrowserRouter([
       {
         path: "/musicas",
         element: <Musica />,
-      },
-      {
-        path: "/sobre",
-        element: <Sobre />,
       }
     ]
   }

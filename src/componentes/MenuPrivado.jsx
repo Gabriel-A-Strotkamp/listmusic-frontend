@@ -3,8 +3,11 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { NavLink, Outlet } from 'react-router-dom';
+import { getUsuario, logout } from '../seguranca/Autenticacao';
 
-function Menu() {
+function MenuPrivado() {
+    const usuario = getUsuario();
+
     return (
         <div>
             <Navbar expand="lg" bg="light">
@@ -59,4 +62,4 @@ function Menu() {
     );
 }
 
-export default Menu;
+export default MenuPrivado;
