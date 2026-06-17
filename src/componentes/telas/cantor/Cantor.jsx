@@ -133,9 +133,10 @@ function Cantor() {
         });
     };
 
-    useEffect(() => {
-        recuperaCantores();
-    }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+useEffect(() => {
+    recuperaCantores();
+}, []);
 
     return (
         <CantorContext.Provider

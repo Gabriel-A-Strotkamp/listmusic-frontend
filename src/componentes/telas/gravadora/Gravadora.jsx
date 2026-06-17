@@ -130,9 +130,10 @@ function Gravadora() {
         });
     };
 
-    useEffect(() => {
-        recuperaGravadoras();
-    }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+useEffect(() => {
+    recuperaGravadoras();
+}, []);
 
     return (
         <GravadoraContext.Provider

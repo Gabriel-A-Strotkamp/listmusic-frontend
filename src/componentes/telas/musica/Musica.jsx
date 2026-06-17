@@ -187,10 +187,11 @@ function Musica() {
     // LOAD INICIAL
     // =========================
 
-    useEffect(() => {
-        recuperaMusicas();
-        carregarDadosRelacionados();
-    }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+useEffect(() => {
+    carregarDadosRelacionados();
+    recuperaMusicas();
+}, []);
 
     // =========================
     // RENDER

@@ -124,9 +124,11 @@ function Genero() {
         });
     };
 
-    useEffect(() => {
-        recuperaGeneros();
-    }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+// eslint-disable-next-line react-hooks/exhaustive-deps
+useEffect(() => {
+    recuperaGeneros();
+}, []);
 
     return (
         <GeneroContext.Provider
