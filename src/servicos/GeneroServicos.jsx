@@ -1,7 +1,9 @@
+import { getToken } from '../seguranca/Autenticacao';
+
 export const getGenerosAPI = async () => {
     const response = await fetch(`${process.env.REACT_APP_ENDERECO_API}/genero`, {
         method: "GET",
-        headers: { "Content-Type": "application/json" }
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getToken()}` }
     });
     return await response.json();
 }
@@ -9,7 +11,7 @@ export const getGenerosAPI = async () => {
 export const getGeneroPorIdAPI = async id => {
     const response = await fetch(`${process.env.REACT_APP_ENDERECO_API}/genero/${id}`, {
         method: "GET",
-        headers: { "Content-Type": "application/json" }
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getToken()}` }
     });
     return await response.json();
 }
@@ -17,7 +19,7 @@ export const getGeneroPorIdAPI = async id => {
 export const deleteGeneroPorIdAPI = async id => {
     const response = await fetch(`${process.env.REACT_APP_ENDERECO_API}/genero/${id}`, {
         method: "DELETE",
-        headers: { "Content-Type": "application/json" }
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getToken()}` }
     });
     return await response.json();
 }
@@ -25,7 +27,7 @@ export const deleteGeneroPorIdAPI = async id => {
 export const cadastraGeneroAPI = async (objeto, metodo) => {
     const response = await fetch(`${process.env.REACT_APP_ENDERECO_API}/genero`, {
         method: metodo,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getToken()}` },
         body: JSON.stringify(objeto),
     });
     return await response.json();

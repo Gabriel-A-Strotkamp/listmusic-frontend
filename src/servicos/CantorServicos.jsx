@@ -1,7 +1,9 @@
+import { getToken } from '../seguranca/Autenticacao';
+
 export const getCantoresAPI = async () => {
     const response = await fetch(`${process.env.REACT_APP_ENDERECO_API}/cantor`, {
         method: "GET",
-        headers: { "Content-Type": "application/json" }
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getToken()}` }
     });
     const data = await response.json();
     return data;
@@ -10,7 +12,7 @@ export const getCantoresAPI = async () => {
 export const getCantorPorIdAPI = async id => {
     const response = await fetch(`${process.env.REACT_APP_ENDERECO_API}/cantor/${id}`, {
         method: "GET",
-        headers: { "Content-Type": "application/json" }
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getToken()}` }
     });
     const data = await response.json();
     return data; 
@@ -19,7 +21,7 @@ export const getCantorPorIdAPI = async id => {
 export const deleteCantorPorIdAPI = async id => {
     const response = await fetch(`${process.env.REACT_APP_ENDERECO_API}/cantor/${id}`, {
         method: "DELETE",
-        headers: { "Content-Type": "application/json" }
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getToken()}` }
     });
     const data = await response.json();
     return data;
@@ -28,7 +30,7 @@ export const deleteCantorPorIdAPI = async id => {
 export const cadastraCantorAPI = async (objeto, metodo) => {
     const response = await fetch(`${process.env.REACT_APP_ENDERECO_API}/cantor`, {
         method: metodo,
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getToken()}` },
         body: JSON.stringify(objeto),
     });
     const data = await response.json();

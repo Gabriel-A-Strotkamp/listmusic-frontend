@@ -3,7 +3,7 @@ import CantorContext from './CantorContext';
 import TabelaCantor from './TabelaCantor';
 import FormCantor from './FormularioCantor';
 import WithAuth from "../../../seguranca/WithAuth";
-
+import { useNavigate } from "react-router-dom";
 
 import {
     getCantoresAPI,
@@ -13,6 +13,8 @@ import {
 } from '../../../servicos/CantorServicos';
 
 function Cantor() {
+
+    const navigate = useNavigate();
 
     const [alerta, setAlerta] = useState({ status: "", message: "" });
     const [listaObjetos, setListaObjetos] = useState([]);
@@ -28,16 +30,32 @@ function Cantor() {
     });
 
     const recuperaCantores = async () => {
-        setListaObjetos(await getCantoresAPI());
-    }
-
-    const remover = async id => {
-        if (window.confirm('Deseja remover este objeto?')) {
-            let retornoAPI = await deleteCantorPorIdAPI(id);
-            setAlerta({ status: retornoAPI.status, message: retornoAPI.message });
-            recuperaCantores();
+        try {
+            setListaObjetos(await getCantoresAPI());
+        } catch (err) {
+            console.error("Erro ao recuperar cantores:", err);
+            navigate("/login", { replace: true });
         }
-    }
+    };
+
+    const remover = async (id) => {
+        if (window.confirm('Deseja remover este objeto?')) {
+            try {
+                let retornoAPI = await deleteCantorPorIdAPI(id);
+
+                setAlerta({
+                    status: retornoAPI.status,
+                    message: retornoAPI.message
+                });
+
+                recuperaCantores();
+
+            } catch (err) {
+                console.error("Erro ao remover cantor:", err);
+                navigate("/login", { replace: true });
+            }
+        }
+    };
 
     const novoObjeto = () => {
         setEditar(false);
@@ -48,59 +66,84 @@ function Cantor() {
             nacionalidade: ""
         });
         setExibirForm(true);
-    }
+    };
 
-    const editarObjeto = async id => {
-    try {
-        const resposta = await getCantorPorIdAPI(id);
+    const editarObjeto = async (id) => {
+        try {
+            const resposta = await getCantorPorIdAPI(id);
 
-        const dados = resposta?.objeto || resposta?.[0] || resposta;
+            const dados = resposta?.objeto || resposta?.[0] || resposta;
 
-        if (!dados) return;
+            if (!dados) return;
 
-        setObjeto({
-            id_cantor: dados.id_cantor || 0,
-            nome: dados.nome || "",
-            data_nascimento: dados.data_nascimento || "",
-            nacionalidade: dados.nacionalidade || ""
-        });
+            setObjeto({
+                id_cantor: dados.id_cantor || 0,
+                nome: dados.nome || "",
+                data_nascimento: dados.data_nascimento || "",
+                nacionalidade: dados.nacionalidade || ""
+            });
 
-        setEditar(true);
-        setExibirForm(true);
+            setEditar(true);
+            setExibirForm(true);
 
-    } catch (erro) {
-        console.error("Erro ao editar cantor:", erro);
-    }
-};
+        } catch (err) {
+            console.error("Erro ao editar cantor:", err);
+            navigate("/login", { replace: true });
+        }
+    };
 
-    const acaoCadastrar = async e => {
+    const acaoCadastrar = async (e) => {
         e.preventDefault();
+
         const metodo = editar ? "PUT" : "POST";
 
-        let retornoAPI = await cadastraCantorAPI(objeto, metodo);
-        setAlerta({ status: retornoAPI.status, message: retornoAPI.message });
+        try {
+            let retornoAPI = await cadastraCantorAPI(objeto, metodo);
 
-        setExibirForm(false);
-        recuperaCantores();
-    }
+            setAlerta({
+                status: retornoAPI.status,
+                message: retornoAPI.message
+            });
 
-    const handleChange = e => {
+            setExibirForm(false);
+
+            recuperaCantores();
+
+        } catch (err) {
+            console.error("Erro ao cadastrar/alterar cantor:", err);
+            navigate("/login", { replace: true });
+        }
+    };
+
+    const handleChange = (e) => {
         const { name, value } = e.target;
-        setObjeto({ ...objeto, [name]: value });
-    }
+
+        setObjeto({
+            ...objeto,
+            [name]: value
+        });
+    };
 
     useEffect(() => {
         recuperaCantores();
     }, []);
 
     return (
-        <CantorContext.Provider value={{
-            listaObjetos, alerta, remover,
-            objeto, editarObjeto,
-            acaoCadastrar, handleChange,
-            novoObjeto, exibirForm, editar,
-            setExibirForm
-        }}>
+        <CantorContext.Provider
+            value={{
+                listaObjetos,
+                alerta,
+                remover,
+                objeto,
+                editarObjeto,
+                acaoCadastrar,
+                handleChange,
+                novoObjeto,
+                exibirForm,
+                editar,
+                setExibirForm
+            }}
+        >
             {exibirForm ? <FormCantor /> : <TabelaCantor />}
         </CantorContext.Provider>
     );

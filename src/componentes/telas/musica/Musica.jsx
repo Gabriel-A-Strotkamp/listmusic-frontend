@@ -3,6 +3,7 @@ import MusicaContext from './MusicaContext';
 import FormMusica from './FormularioMusica';
 import Tabela from './TabelaMusica';
 import WithAuth from "../../../seguranca/WithAuth";
+import { useNavigate } from "react-router-dom";
 
 // Serviços da própria entidade
 import {
@@ -19,18 +20,20 @@ import { getGravadorasAPI } from '../../../servicos/GravadoraServicos';
 
 function Musica() {
 
+    const navigate = useNavigate();
+
     const [alerta, setAlerta] = useState({ status: "", message: "" });
     const [listaObjetos, setListaObjetos] = useState([]);
 
     const [editar, setEditar] = useState(false);
     const [exibirForm, setExibirForm] = useState(false);
 
-    // 🔹 Listas para os SELECTs
+    // Listas para os SELECTs
     const [listaCantores, setListaCantores] = useState([]);
     const [listaGeneros, setListaGeneros] = useState([]);
     const [listaGravadoras, setListaGravadoras] = useState([]);
 
-    // 🔹 Objeto principal
+    // Objeto principal
     const [objeto, setObjeto] = useState({
         id_musica: "",
         nome: "",
@@ -43,21 +46,37 @@ function Musica() {
     });
 
     // =========================
-    // 🔹 CRUD PRINCIPAL
+    // CRUD PRINCIPAL
     // =========================
 
     const recuperaMusicas = async () => {
-        const dados = await getMusicasAPI();
-        setListaObjetos(dados);
-    }
-
-    const remover = async id => {
-        if (window.confirm('Deseja remover este objeto?')) {
-            let retornoAPI = await deleteMusicaPorIdAPI(id);
-            setAlerta({ status: retornoAPI.status, message: retornoAPI.message });
-            recuperaMusicas();
+        try {
+            const dados = await getMusicasAPI();
+            setListaObjetos(dados);
+        } catch (err) {
+            console.error("Erro ao recuperar músicas:", err);
+            navigate("/login", { replace: true });
         }
-    }
+    };
+
+    const remover = async (id) => {
+        if (window.confirm('Deseja remover este objeto?')) {
+            try {
+                let retornoAPI = await deleteMusicaPorIdAPI(id);
+
+                setAlerta({
+                    status: retornoAPI.status,
+                    message: retornoAPI.message
+                });
+
+                recuperaMusicas();
+
+            } catch (err) {
+                console.error("Erro ao remover música:", err);
+                navigate("/login", { replace: true });
+            }
+        }
+    };
 
     const novoObjeto = () => {
         setEditar(false);
@@ -75,8 +94,9 @@ function Musica() {
         });
 
         setExibirForm(true);
-    }
-    const editarObjeto = async id => {
+    };
+
+    const editarObjeto = async (id) => {
         try {
             const resposta = await getMusicaPorIdAPI(id);
 
@@ -98,13 +118,15 @@ function Musica() {
             setEditar(true);
             setExibirForm(true);
 
-        } catch (erro) {
-            console.error("Erro ao editar música:", erro);
+        } catch (err) {
+            console.error("Erro ao editar música:", err);
+            navigate("/login", { replace: true });
         }
     };
 
-    const acaoCadastrar = async e => {
+    const acaoCadastrar = async (e) => {
         e.preventDefault();
+
         const metodo = editar ? "PUT" : "POST";
 
         try {
@@ -116,20 +138,26 @@ function Musica() {
             });
 
             setExibirForm(false);
+
             recuperaMusicas();
 
-        } catch (erro) {
-            console.error("Erro ao salvar:", erro);
+        } catch (err) {
+            console.error("Erro ao cadastrar/alterar música:", err);
+            navigate("/login", { replace: true });
         }
-    }
+    };
 
-    const handleChange = e => {
+    const handleChange = (e) => {
         const { name, value } = e.target;
-        setObjeto({ ...objeto, [name]: value });
-    }
+
+        setObjeto({
+            ...objeto,
+            [name]: value
+        });
+    };
 
     // =========================
-    // 🔹 CARREGAR RELACIONAMENTOS
+    // CARREGAR RELACIONAMENTOS
     // =========================
 
     const carregarDadosRelacionados = async () => {
@@ -142,13 +170,14 @@ function Musica() {
             setListaGeneros(generos);
             setListaGravadoras(gravadoras);
 
-        } catch (erro) {
-            console.error("Erro ao carregar dados relacionados:", erro);
+        } catch (err) {
+            console.error("Erro ao carregar dados relacionados:", err);
+            navigate("/login", { replace: true });
         }
-    }
+    };
 
     // =========================
-    // 🔹 LOAD INICIAL
+    // LOAD INICIAL
     // =========================
 
     useEffect(() => {
@@ -157,30 +186,31 @@ function Musica() {
     }, []);
 
     // =========================
-    // 🔹 RENDER
+    // RENDER
     // =========================
 
     return (
-        <MusicaContext.Provider value={{
-            listaObjetos,
-            alerta,
-            remover,
+        <MusicaContext.Provider
+            value={{
+                listaObjetos,
+                alerta,
+                remover,
 
-            objeto,
-            editarObjeto,
-            acaoCadastrar,
-            handleChange,
-            novoObjeto,
+                objeto,
+                editarObjeto,
+                acaoCadastrar,
+                handleChange,
+                novoObjeto,
 
-            exibirForm,
-            editar,
-            setExibirForm,
+                exibirForm,
+                editar,
+                setExibirForm,
 
-            // 🔥 LISTAS PARA SELECT
-            listaCantores,
-            listaGeneros,
-            listaGravadoras
-        }}>
+                listaCantores,
+                listaGeneros,
+                listaGravadoras
+            }}
+        >
             {exibirForm ? <FormMusica /> : <Tabela />}
         </MusicaContext.Provider>
     );
