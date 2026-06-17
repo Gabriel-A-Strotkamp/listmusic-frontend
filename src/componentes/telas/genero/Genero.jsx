@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import GeneroContext from './GeneroContext';
 import Formulario from './FormularioGenero';
 import Tabela from './TabelaGenero';
@@ -29,7 +29,11 @@ function Genero() {
         descricao: ""
     });
 
-    const recuperaGeneros = async () => {
+    // =========================
+    // LISTAR
+    // =========================
+
+    const recuperaGeneros = useCallback(async () => {
         try {
             setCarregando(true);
 
@@ -42,12 +46,16 @@ function Genero() {
         } finally {
             setCarregando(false);
         }
-    };
+    }, [navigate]);
+
+    // =========================
+    // REMOVER
+    // =========================
 
     const remover = async (id) => {
         if (window.confirm('Deseja remover este objeto?')) {
             try {
-                const retornoAPI = await deleteGeneroPorIdAPI(id);
+                let retornoAPI = await deleteGeneroPorIdAPI(id);
 
                 setAlerta({
                     status: retornoAPI.status,
@@ -63,8 +71,13 @@ function Genero() {
         }
     };
 
+    // =========================
+    // NOVO
+    // =========================
+
     const novoObjeto = () => {
         setEditar(false);
+        setAlerta({ status: "", message: "" });
 
         setObjeto({
             id_genero: 0,
@@ -73,6 +86,10 @@ function Genero() {
 
         setExibirForm(true);
     };
+
+    // =========================
+    // EDITAR
+    // =========================
 
     const editarObjeto = async (id) => {
         try {
@@ -96,13 +113,17 @@ function Genero() {
         }
     };
 
+    // =========================
+    // CADASTRAR / ALTERAR
+    // =========================
+
     const acaoCadastrar = async (e) => {
         e.preventDefault();
 
         const metodo = editar ? "PUT" : "POST";
 
         try {
-            const retornoAPI = await cadastraGeneroAPI(objeto, metodo);
+            let retornoAPI = await cadastraGeneroAPI(objeto, metodo);
 
             setAlerta({
                 status: retornoAPI.status,
@@ -119,6 +140,10 @@ function Genero() {
         }
     };
 
+    // =========================
+    // CHANGE FORM
+    // =========================
+
     const handleChange = (e) => {
         const { name, value } = e.target;
 
@@ -128,10 +153,17 @@ function Genero() {
         });
     };
 
+    // =========================
+    // LOAD INICIAL
+    // =========================
+
     useEffect(() => {
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         recuperaGeneros();
-    }, []);
+    }, [recuperaGeneros]);
+
+    // =========================
+    // RENDER
+    // =========================
 
     return (
         <GeneroContext.Provider
@@ -149,13 +181,11 @@ function Genero() {
                 setExibirForm
             }}
         >
-            {exibirForm ? (
-                <Formulario />
-            ) : (
-                <Carregando carregando={carregando}>
-                    <Tabela />
-                </Carregando>
-            )}
+            <Formulario />
+
+            <Carregando carregando={carregando}>
+                <Tabela />
+            </Carregando>
         </GeneroContext.Provider>
     );
 }
