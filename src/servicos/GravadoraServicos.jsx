@@ -3,7 +3,7 @@ import { getToken } from '../seguranca/Autenticacao';
 export const getGravadorasAPI = async () => {
     const response = await fetch(`${process.env.REACT_APP_ENDERECO_API}/gravadora`, {
         method: "GET",
-        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getToken()}` }
+        headers: { "Content-Type": "application/json", "Authorization": getToken()}
     });
     return await response.json();
 }
@@ -11,7 +11,7 @@ export const getGravadorasAPI = async () => {
 export const getGravadoraPorIdAPI = async id => {
     const response = await fetch(`${process.env.REACT_APP_ENDERECO_API}/gravadora/${id}`, {
         method: "GET",
-        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getToken()}` }
+       headers: { "Content-Type": "application/json", "Authorization": getToken()}
     });
     return await response.json();
 }
@@ -19,7 +19,7 @@ export const getGravadoraPorIdAPI = async id => {
 export const deleteGravadoraPorIdAPI = async id => {
     const response = await fetch(`${process.env.REACT_APP_ENDERECO_API}/gravadora/${id}`, {
         method: "DELETE",
-        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getToken()}` }
+        headers: { "Content-Type": "application/json", "Authorization": getToken()}
     });
     return await response.json();
 }
@@ -27,7 +27,7 @@ export const deleteGravadoraPorIdAPI = async id => {
 export const cadastraGravadoraAPI = async (objeto, metodo) => {
     const response = await fetch(`${process.env.REACT_APP_ENDERECO_API}/gravadora`, {
         method: metodo,
-        headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getToken()}` },
+        headers: { "Content-Type": "application/json", "Authorization": getToken()},
         body: JSON.stringify(objeto),
     });
     return await response.json();
