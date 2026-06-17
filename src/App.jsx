@@ -1,8 +1,8 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import 'bootstrap/dist/css/bootstrap.min.css'
-import '@popperjs/core/dist/cjs/popper.js'
-import 'bootstrap/dist/js/bootstrap.min.js'
-import 'bootstrap-icons/font/bootstrap-icons.css'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '@popperjs/core/dist/cjs/popper.js';
+import 'bootstrap/dist/js/bootstrap.min.js';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 // Componentes base
 import MenuPublico from './componentes/MenuPublico';
@@ -21,21 +21,21 @@ import Musica from "./componentes/telas/musica/Musica";
 
 const router = createBrowserRouter([
   {
-    path : "/",
-    element : <MenuPublico/>,
-    children : [
+    path: "/",
+    element: <MenuPublico />,
+    children: [
       {
-        index : true,
-        element : <Home/>
+        index: true,
+        element: <Home />
       },
       {
-        path : "/sobre",
-        element : <Sobre/>
-      }	,  
+        path: "sobre",
+        element: <Sobre />
+      },
       {
-        path : "/login",
-        element :  <Login/>
-      }              
+        path: "login",
+        element: <Login />
+      }
     ]
   },
   {
@@ -44,23 +44,23 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Home />,
+        element: <Home />
       },
       {
-        path: "/cantores",
-        element: <Cantor />,
+        path: "cantores",
+        element: <Cantor />
       },
       {
-        path: "/generos",
-        element: <Genero />,
+        path: "generos",
+        element: <Genero />
       },
       {
-        path: "/gravadoras",
-        element: <Gravadora />,
+        path: "gravadoras",
+        element: <Gravadora />
       },
       {
-        path: "/musicas",
-        element: <Musica />,
+        path: "musicas",
+        element: <Musica />
       }
     ]
   }
