@@ -32,7 +32,10 @@ function Genero() {
     const recuperaGeneros = async () => {
         try {
             setCarregando(true);
-            setListaObjetos(await getGenerosAPI());
+
+            const dados = await getGenerosAPI();
+            setListaObjetos(dados);
+
         } catch (err) {
             console.error("Erro ao recuperar gêneros:", err);
             navigate("/login", { replace: true });
@@ -44,7 +47,7 @@ function Genero() {
     const remover = async (id) => {
         if (window.confirm('Deseja remover este objeto?')) {
             try {
-                let retornoAPI = await deleteGeneroPorIdAPI(id);
+                const retornoAPI = await deleteGeneroPorIdAPI(id);
 
                 setAlerta({
                     status: retornoAPI.status,
@@ -99,7 +102,7 @@ function Genero() {
         const metodo = editar ? "PUT" : "POST";
 
         try {
-            let retornoAPI = await cadastraGeneroAPI(objeto, metodo);
+            const retornoAPI = await cadastraGeneroAPI(objeto, metodo);
 
             setAlerta({
                 status: retornoAPI.status,
@@ -107,6 +110,7 @@ function Genero() {
             });
 
             setExibirForm(false);
+
             recuperaGeneros();
 
         } catch (err) {
@@ -124,11 +128,10 @@ function Genero() {
         });
     };
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-// eslint-disable-next-line react-hooks/exhaustive-deps
-useEffect(() => {
-    recuperaGeneros();
-}, []);
+    useEffect(() => {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        recuperaGeneros();
+    }, []);
 
     return (
         <GeneroContext.Provider
@@ -146,11 +149,13 @@ useEffect(() => {
                 setExibirForm
             }}
         >
-            <Formulario />
-
-            <Carregando carregando={carregando}>
-                <Tabela />
-            </Carregando>
+            {exibirForm ? (
+                <Formulario />
+            ) : (
+                <Carregando carregando={carregando}>
+                    <Tabela />
+                </Carregando>
+            )}
         </GeneroContext.Provider>
     );
 }

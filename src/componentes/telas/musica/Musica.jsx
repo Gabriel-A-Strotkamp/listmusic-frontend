@@ -6,7 +6,7 @@ import Carregando from '../../comuns/Carregando';
 import WithAuth from "../../../seguranca/WithAuth";
 import { useNavigate } from "react-router-dom";
 
-// Serviços da própria entidade
+// Serviços da entidade principal
 import {
     getMusicasAPI,
     getMusicaPorIdAPI,
@@ -14,7 +14,7 @@ import {
     cadastraMusicaAPI
 } from '../../../servicos/MusicaServicos';
 
-// Serviços das entidades relacionadas
+// Serviços relacionados
 import { getCantoresAPI } from '../../../servicos/CantorServicos';
 import { getGenerosAPI } from '../../../servicos/GeneroServicos';
 import { getGravadorasAPI } from '../../../servicos/GravadoraServicos';
@@ -30,12 +30,10 @@ function Musica() {
     const [editar, setEditar] = useState(false);
     const [exibirForm, setExibirForm] = useState(false);
 
-    // Listas para os SELECTs
     const [listaCantores, setListaCantores] = useState([]);
     const [listaGeneros, setListaGeneros] = useState([]);
     const [listaGravadoras, setListaGravadoras] = useState([]);
 
-    // Objeto principal
     const [objeto, setObjeto] = useState({
         id_musica: "",
         nome: "",
@@ -46,10 +44,6 @@ function Musica() {
         id_genero: "",
         id_gravadora: ""
     });
-
-    // =========================
-    // CRUD PRINCIPAL
-    // =========================
 
     const recuperaMusicas = async () => {
         try {
@@ -69,7 +63,7 @@ function Musica() {
     const remover = async (id) => {
         if (window.confirm('Deseja remover este objeto?')) {
             try {
-                let retornoAPI = await deleteMusicaPorIdAPI(id);
+                const retornoAPI = await deleteMusicaPorIdAPI(id);
 
                 setAlerta({
                     status: retornoAPI.status,
@@ -137,7 +131,7 @@ function Musica() {
         const metodo = editar ? "PUT" : "POST";
 
         try {
-            let retornoAPI = await cadastraMusicaAPI(objeto, metodo);
+            const retornoAPI = await cadastraMusicaAPI(objeto, metodo);
 
             setAlerta({
                 status: retornoAPI.status,
@@ -163,10 +157,6 @@ function Musica() {
         });
     };
 
-    // =========================
-    // DADOS RELACIONADOS
-    // =========================
-
     const carregarDadosRelacionados = async () => {
         try {
             const cantores = await getCantoresAPI();
@@ -183,19 +173,12 @@ function Musica() {
         }
     };
 
-    // =========================
-    // LOAD INICIAL
-    // =========================
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-useEffect(() => {
-    carregarDadosRelacionados();
-    recuperaMusicas();
-}, []);
-
-    // =========================
-    // RENDER
-    // =========================
+    useEffect(() => {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        carregarDadosRelacionados();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        recuperaMusicas();
+    }, []);
 
     return (
         <MusicaContext.Provider
@@ -203,17 +186,14 @@ useEffect(() => {
                 listaObjetos,
                 alerta,
                 remover,
-
                 objeto,
                 editarObjeto,
                 acaoCadastrar,
                 handleChange,
                 novoObjeto,
-
                 exibirForm,
                 editar,
                 setExibirForm,
-
                 listaCantores,
                 listaGeneros,
                 listaGravadoras

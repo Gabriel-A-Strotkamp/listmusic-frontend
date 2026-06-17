@@ -34,7 +34,8 @@ function Gravadora() {
         try {
             setCarregando(true);
 
-            setListaObjetos(await getGravadorasAPI());
+            const dados = await getGravadorasAPI();
+            setListaObjetos(dados);
 
         } catch (err) {
             console.error("Erro ao recuperar gravadoras:", err);
@@ -47,7 +48,7 @@ function Gravadora() {
     const remover = async (id) => {
         if (window.confirm('Deseja remover este objeto?')) {
             try {
-                let retornoAPI = await deleteGravadoraPorIdAPI(id);
+                const retornoAPI = await deleteGravadoraPorIdAPI(id);
 
                 setAlerta({
                     status: retornoAPI.status,
@@ -104,7 +105,7 @@ function Gravadora() {
         const metodo = editar ? "PUT" : "POST";
 
         try {
-            let retornoAPI = await cadastraGravadoraAPI(objeto, metodo);
+            const retornoAPI = await cadastraGravadoraAPI(objeto, metodo);
 
             setAlerta({
                 status: retornoAPI.status,
@@ -130,10 +131,10 @@ function Gravadora() {
         });
     };
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-useEffect(() => {
-    recuperaGravadoras();
-}, []);
+    useEffect(() => {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        recuperaGravadoras();
+    }, []);
 
     return (
         <GravadoraContext.Provider
@@ -151,11 +152,13 @@ useEffect(() => {
                 setExibirForm
             }}
         >
-            <Formulario />
-
-            <Carregando carregando={carregando}>
-                <Tabela />
-            </Carregando>
+            {exibirForm ? (
+                <Formulario />
+            ) : (
+                <Carregando carregando={carregando}>
+                    <Tabela />
+                </Carregando>
+            )}
         </GravadoraContext.Provider>
     );
 }

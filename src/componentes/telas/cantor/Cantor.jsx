@@ -35,7 +35,8 @@ function Cantor() {
         try {
             setCarregando(true);
 
-            setListaObjetos(await getCantoresAPI());
+            const dados = await getCantoresAPI();
+            setListaObjetos(dados);
 
         } catch (err) {
             console.error("Erro ao recuperar cantores:", err);
@@ -48,7 +49,7 @@ function Cantor() {
     const remover = async (id) => {
         if (window.confirm('Deseja remover este objeto?')) {
             try {
-                let retornoAPI = await deleteCantorPorIdAPI(id);
+                const retornoAPI = await deleteCantorPorIdAPI(id);
 
                 setAlerta({
                     status: retornoAPI.status,
@@ -107,7 +108,7 @@ function Cantor() {
         const metodo = editar ? "PUT" : "POST";
 
         try {
-            let retornoAPI = await cadastraCantorAPI(objeto, metodo);
+            const retornoAPI = await cadastraCantorAPI(objeto, metodo);
 
             setAlerta({
                 status: retornoAPI.status,
@@ -133,10 +134,10 @@ function Cantor() {
         });
     };
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-useEffect(() => {
-    recuperaCantores();
-}, []);
+    useEffect(() => {
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        recuperaCantores();
+    }, []);
 
     return (
         <CantorContext.Provider
