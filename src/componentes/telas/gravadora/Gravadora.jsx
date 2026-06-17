@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import GravadoraContext from './GravadoraContext';
 import Formulario from './FormularioGravadora';
 import Tabela from './TabelaGravadora';
@@ -30,7 +30,11 @@ function Gravadora() {
         pais: ""
     });
 
-    const recuperaGravadoras = async () => {
+    // =========================
+    // LISTAR
+    // =========================
+
+    const recuperaGravadoras = useCallback(async () => {
         try {
             setCarregando(true);
 
@@ -43,12 +47,16 @@ function Gravadora() {
         } finally {
             setCarregando(false);
         }
-    };
+    }, [navigate]);
+
+    // =========================
+    // REMOVER
+    // =========================
 
     const remover = async (id) => {
         if (window.confirm('Deseja remover este objeto?')) {
             try {
-                const retornoAPI = await deleteGravadoraPorIdAPI(id);
+                let retornoAPI = await deleteGravadoraPorIdAPI(id);
 
                 setAlerta({
                     status: retornoAPI.status,
@@ -64,8 +72,13 @@ function Gravadora() {
         }
     };
 
+    // =========================
+    // NOVO
+    // =========================
+
     const novoObjeto = () => {
         setEditar(false);
+        setAlerta({ status: "", message: "" });
 
         setObjeto({
             id_gravadora: 0,
@@ -75,6 +88,10 @@ function Gravadora() {
 
         setExibirForm(true);
     };
+
+    // =========================
+    // EDITAR
+    // =========================
 
     const editarObjeto = async (id) => {
         try {
@@ -99,13 +116,17 @@ function Gravadora() {
         }
     };
 
+    // =========================
+    // CADASTRAR / ALTERAR
+    // =========================
+
     const acaoCadastrar = async (e) => {
         e.preventDefault();
 
         const metodo = editar ? "PUT" : "POST";
 
         try {
-            const retornoAPI = await cadastraGravadoraAPI(objeto, metodo);
+            let retornoAPI = await cadastraGravadoraAPI(objeto, metodo);
 
             setAlerta({
                 status: retornoAPI.status,
@@ -122,6 +143,10 @@ function Gravadora() {
         }
     };
 
+    // =========================
+    // CHANGE FORM
+    // =========================
+
     const handleChange = (e) => {
         const { name, value } = e.target;
 
@@ -131,10 +156,17 @@ function Gravadora() {
         });
     };
 
+    // =========================
+    // LOAD INICIAL
+    // =========================
+
     useEffect(() => {
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         recuperaGravadoras();
-    }, []);
+    }, [recuperaGravadoras]);
+
+    // =========================
+    // RENDER
+    // =========================
 
     return (
         <GravadoraContext.Provider
@@ -152,13 +184,11 @@ function Gravadora() {
                 setExibirForm
             }}
         >
-            {exibirForm ? (
-                <Formulario />
-            ) : (
-                <Carregando carregando={carregando}>
-                    <Tabela />
-                </Carregando>
-            )}
+            <Formulario />
+
+            <Carregando carregando={carregando}>
+                <Tabela />
+            </Carregando>
         </GravadoraContext.Provider>
     );
 }
