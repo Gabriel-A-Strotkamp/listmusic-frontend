@@ -6,8 +6,11 @@ import 'bootstrap-icons/font/bootstrap-icons.css'
 
 // Componentes base
 import MenuPublico from './componentes/MenuPublico';
-import MenuPrivado from './componentes/MenuPrivado'
-import Home from './componentes/telas/Home'
+import MenuPrivado from './componentes/MenuPrivado';
+import login from './componentes/telas/login/Login';
+
+// Telas do projeto
+import Home from './componentes/telas/Home';
 import Sobre from "./componentes/telas/Sobre";
 
 // CRUD do projeto
