@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import CantorContext from './CantorContext';
 import TabelaCantor from './TabelaCantor';
 import FormCantor from './FormularioCantor';
@@ -31,7 +31,11 @@ function Cantor() {
         nacionalidade: ""
     });
 
-    const recuperaCantores = async () => {
+    // =========================
+    // LISTAR
+    // =========================
+
+    const recuperaCantores = useCallback(async () => {
         try {
             setCarregando(true);
 
@@ -44,12 +48,16 @@ function Cantor() {
         } finally {
             setCarregando(false);
         }
-    };
+    }, [navigate]);
+
+    // =========================
+    // REMOVER
+    // =========================
 
     const remover = async (id) => {
         if (window.confirm('Deseja remover este objeto?')) {
             try {
-                const retornoAPI = await deleteCantorPorIdAPI(id);
+                let retornoAPI = await deleteCantorPorIdAPI(id);
 
                 setAlerta({
                     status: retornoAPI.status,
@@ -65,8 +73,13 @@ function Cantor() {
         }
     };
 
+    // =========================
+    // NOVO
+    // =========================
+
     const novoObjeto = () => {
         setEditar(false);
+        setAlerta({ status: "", message: "" });
 
         setObjeto({
             id_cantor: 0,
@@ -77,6 +90,10 @@ function Cantor() {
 
         setExibirForm(true);
     };
+
+    // =========================
+    // EDITAR
+    // =========================
 
     const editarObjeto = async (id) => {
         try {
@@ -102,13 +119,17 @@ function Cantor() {
         }
     };
 
+    // =========================
+    // CADASTRAR / ALTERAR
+    // =========================
+
     const acaoCadastrar = async (e) => {
         e.preventDefault();
 
         const metodo = editar ? "PUT" : "POST";
 
         try {
-            const retornoAPI = await cadastraCantorAPI(objeto, metodo);
+            let retornoAPI = await cadastraCantorAPI(objeto, metodo);
 
             setAlerta({
                 status: retornoAPI.status,
@@ -125,6 +146,10 @@ function Cantor() {
         }
     };
 
+    // =========================
+    // CHANGE FORM
+    // =========================
+
     const handleChange = (e) => {
         const { name, value } = e.target;
 
@@ -134,10 +159,17 @@ function Cantor() {
         });
     };
 
+    // =========================
+    // LOAD INICIAL
+    // =========================
+
     useEffect(() => {
-        // eslint-disable-next-line react-hooks/exhaustive-deps
         recuperaCantores();
-    }, []);
+    }, [recuperaCantores]);
+
+    // =========================
+    // RENDER
+    // =========================
 
     return (
         <CantorContext.Provider
