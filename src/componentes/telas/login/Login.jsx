@@ -14,32 +14,37 @@ function Login() {
     const [carregando, setCarregando] = useState(false);
 
     const acaoLogin = async e => {
-
         e.preventDefault();
 
         try {
-            const body = {
-                email: email,
-                senha: senha
-            };
+            const body = { email, senha };
             setCarregando(true);
-            await fetch(`${process.env.REACT_APP_ENDERECO_API}/login`, {
+            setAlerta({ status: "", message: "" }); // Limpa alertas anteriores
+
+            // Tente usar import.meta.env.VITE_ENDERECO_API se o projeto for Vite
+            // ou mantenha process.env.REACT_APP_ENDERECO_API se for Create React App antigo
+            const urlApi = import.meta.env?.VITE_ENDERECO_API || process.env.REACT_APP_ENDERECO_API;
+
+            const response = await fetch(`${urlApi}/login`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body),
-            }).then(response => response.json())
-                .then(json => {
-                    if (json.auth === false) {
-                        setAlerta({ status: "error", message: json.message })
-                    }
-                    if (json.auth === true) {
-                        setAutenticado(true);
-                        gravaAutenticacao(json);
-                    }
-                });
+            });
+
+            const json = await response.json();
+
+            // Valida se a resposta HTTP deu erro (como 401 ou 500)
+            if (!response.ok) {
+                throw new Error(json.message || "Usuário ou senha inválidos");
+            }
+
+            // Se chegou aqui, o status é de sucesso (200/201)
+            setAutenticado(true);
+            gravaAutenticacao(json);
+
         } catch (err) {
             console.error(err.message);
-            setAlerta({ status: "error", message: err.message })
+            setAlerta({ status: "error", message: err.message });
         } finally {
             setCarregando(false);
         }
@@ -52,7 +57,8 @@ function Login() {
                 setAutenticado(true);
             }
         } catch (err) {
-            setAlerta({ status: "error", message: err != null ? err.message : "" });
+            // Correção para ler o erro stringificado ou objeto de erro nativo
+            setAlerta({ status: "error", message: err?.message || String(err) });
         }
     }, []);
 
@@ -61,7 +67,7 @@ function Login() {
     }
 
     return (
-        <div className="container"  >
+        <div className="container">
             <div className="row justify-content-center">
                 <div className="col-12 col-md-6">
                     <Carregando carregando={carregando}>
@@ -69,7 +75,7 @@ function Login() {
                         <form onSubmit={acaoLogin}>
                             <h1 className="h3 mb-3 fw-normal">Login de usuário</h1>
                             <CampoEntrada value={email}
-                                id="txtEmail" name="email" label="Nome"
+                                id="txtEmail" name="email" label="E-mail"
                                 tipo="email" onchange={e => setEmail(e.target.value)}
                                 msgvalido="Email OK" msginvalido="Informe o email"
                                 requerido={true} readonly={false}
@@ -86,8 +92,7 @@ function Login() {
                 </div>
             </div>
         </div>
-    )
-
+    );
 }
 
 export default Login;
