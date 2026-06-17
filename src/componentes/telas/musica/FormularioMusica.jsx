@@ -1,13 +1,10 @@
-import { useContext } from 'react'
+import { useContext } from 'react';
 import Alerta from '../../comuns/Alerta';
 import MusicaContext from './MusicaContext';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
-import Form from 'react-bootstrap/Form';
-import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Col from 'react-bootstrap/Col';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
+import Form from 'react-bootstrap/Form';
+import CampoEntrada from '../../comuns/CampoEntrada';
+import Dialogo from '../../comuns/Dialogo';
 
 function FormMusica() {
 
@@ -18,8 +15,6 @@ function FormMusica() {
         alerta,
         exibirForm,
         setExibirForm,
-
-        // 🔥 listas vindas do context
         listaCantores,
         listaGeneros,
         listaGravadoras
@@ -27,149 +22,144 @@ function FormMusica() {
     } = useContext(MusicaContext);
 
     return (
-        <Modal show={exibirForm} onHide={() => setExibirForm(false)}>
-            <Modal.Header closeButton>
-                <Modal.Title>Música</Modal.Title>
-            </Modal.Header>
+        <Dialogo
+            id="modalEdicao"
+            titulo="Música"
+            idform="formulario"
+            acaoCadastrar={acaoCadastrar}
+            exibirForm={exibirForm}
+            setExibirForm={setExibirForm}
+        >
 
-            <form onSubmit={acaoCadastrar}>
-                <Modal.Body>
-                    <Container>
-                        <Row>
+            <Alerta alerta={alerta} />
 
-                            <Alerta alerta={alerta} />
+            <Col xs={12} md={12}>
+                <CampoEntrada
+                    value={objeto.id_musica}
+                    id="txtIdMusica"
+                    name="id_musica"
+                    label="ID"
+                    tipo="number"
+                    onchange={handleChange}
+                    readonly={true}
+                    maxCaracteres={10}
+                />
+            </Col>
 
-                            {/* ID */}
-                            <Col md={12}>
-                                <FloatingLabel label="ID" className="mb-3">
-                                    <Form.Control
-                                        readOnly
-                                        name="id_musica"
-                                        value={objeto?.id_musica || ""}
-                                    />
-                                </FloatingLabel>
-                            </Col>
+            <Col xs={12} md={12}>
+                <CampoEntrada
+                    value={objeto.nome}
+                    id="txtNome"
+                    name="nome"
+                    label="Nome"
+                    tipo="text"
+                    onchange={handleChange}
+                    msgvalido="Nome informado"
+                    msginvalido="Informe o nome da música"
+                    requerido={true}
+                    readonly={false}
+                    maxCaracteres={100}
+                />
+            </Col>
 
-                            {/* NOME */}
-                            <Col md={12}>
-                                <FloatingLabel label="Nome" className="mb-3">
-                                    <Form.Control
-                                        required
-                                        name="nome"
-                                        value={objeto?.nome || ""}
-                                        onChange={handleChange}
-                                    />
-                                </FloatingLabel>
-                            </Col>
+            <Col xs={12} md={6}>
+                <CampoEntrada
+                    value={objeto.ano}
+                    id="txtAno"
+                    name="ano"
+                    label="Ano"
+                    tipo="number"
+                    onchange={handleChange}
+                    readonly={false}
+                    maxCaracteres={4}
+                />
+            </Col>
 
-                            {/* ANO */}
-                            <Col md={6}>
-                                <FloatingLabel label="Ano" className="mb-3">
-                                    <Form.Control
-                                        name="ano"
-                                        value={objeto?.ano || ""}
-                                        onChange={handleChange}
-                                    />
-                                </FloatingLabel>
-                            </Col>
+            <Col xs={12} md={6}>
+                <CampoEntrada
+                    value={objeto.duracao}
+                    id="txtDuracao"
+                    name="duracao"
+                    label="Duração"
+                    tipo="text"
+                    onchange={handleChange}
+                    readonly={false}
+                    maxCaracteres={20}
+                />
+            </Col>
 
-                            {/* DURAÇÃO */}
-                            <Col md={6}>
-                                <FloatingLabel label="Duração" className="mb-3">
-                                    <Form.Control
-                                        name="duracao"
-                                        value={objeto?.duracao || ""}
-                                        onChange={handleChange}
-                                    />
-                                </FloatingLabel>
-                            </Col>
+            <Col xs={12} md={12}>
+                <CampoEntrada
+                    value={objeto.album}
+                    id="txtAlbum"
+                    name="album"
+                    label="Álbum"
+                    tipo="text"
+                    onchange={handleChange}
+                    readonly={false}
+                    maxCaracteres={100}
+                />
+            </Col>
 
-                            {/* ÁLBUM */}
-                            <Col md={12}>
-                                <FloatingLabel label="Álbum" className="mb-3">
-                                    <Form.Control
-                                        name="album"
-                                        value={objeto?.album || ""}
-                                        onChange={handleChange}
-                                    />
-                                </FloatingLabel>
-                            </Col>
+            {/* Cantor */}
+            <Col xs={12} md={4}>
+                <Form.Label>Cantor</Form.Label>
+                <Form.Select
+                    name="id_cantor"
+                    value={objeto.id_cantor || ""}
+                    onChange={handleChange}
+                    required
+                >
+                    <option value="">Selecione</option>
 
-                            {/* CANTOR */}
-                            <Col md={4}>
-                                <FloatingLabel label="Cantor" className="mb-3">
-                                    <Form.Select
-                                        name="id_cantor"
-                                        value={objeto?.id_cantor || ""}
-                                        onChange={handleChange}
-                                        required
-                                    >
-                                        <option value="">Selecione</option>
+                    {listaCantores.map(c => (
+                        <option key={c.id_cantor} value={c.id_cantor}>
+                            {c.nome}
+                        </option>
+                    ))}
+                </Form.Select>
+            </Col>
 
-                                        {listaCantores.map(c => (
-                                            <option key={c.id_cantor} value={c.id_cantor}>
-                                                {c.nome}
-                                            </option>
-                                        ))}
-                                    </Form.Select>
-                                </FloatingLabel>
-                            </Col>
+            {/* Gênero */}
+            <Col xs={12} md={4}>
+                <Form.Label>Gênero</Form.Label>
+                <Form.Select
+                    name="id_genero"
+                    value={objeto.id_genero || ""}
+                    onChange={handleChange}
+                    required
+                >
+                    <option value="">Selecione</option>
 
-                            {/* GÊNERO */}
-                            <Col md={4}>
-                                <FloatingLabel label="Gênero" className="mb-3">
-                                    <Form.Select
-                                        name="id_genero"
-                                        value={objeto?.id_genero || ""}
-                                        onChange={handleChange}
-                                        required
-                                    >
-                                        <option value="">Selecione</option>
+                    {listaGeneros.map(g => (
+                        <option key={g.id_genero} value={g.id_genero}>
+                            {g.descricao}
+                        </option>
+                    ))}
+                </Form.Select>
+            </Col>
 
-                                        {listaGeneros.map(g => (
-                                            <option key={g.id_genero} value={g.id_genero}>
-                                                {g.descricao}
-                                            </option>
-                                        ))}
-                                    </Form.Select>
-                                </FloatingLabel>
-                            </Col>
+            {/* Gravadora */}
+            <Col xs={12} md={4}>
+                <Form.Label>Gravadora</Form.Label>
+                <Form.Select
+                    name="id_gravadora"
+                    value={objeto.id_gravadora || ""}
+                    onChange={handleChange}
+                    required
+                >
+                    <option value="">Selecione</option>
 
-                            {/* GRAVADORA */}
-                            <Col md={4}>
-                                <FloatingLabel label="Gravadora" className="mb-3">
-                                    <Form.Select
-                                        name="id_gravadora"
-                                        value={objeto?.id_gravadora || ""}
-                                        onChange={handleChange}
-                                        required
-                                    >
-                                        <option value="">Selecione</option>
+                    {listaGravadoras.map(g => (
+                        <option key={g.id_gravadora} value={g.id_gravadora}>
+                            {g.nome}
+                        </option>
+                    ))}
+                </Form.Select>
+            </Col>
 
-                                        {listaGravadoras.map(g => (
-                                            <option key={g.id_gravadora} value={g.id_gravadora}>
-                                                {g.nome}
-                                            </option>
-                                        ))}
-                                    </Form.Select>
-                                </FloatingLabel>
-                            </Col>
-
-                        </Row>
-                    </Container>
-                </Modal.Body>
-
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setExibirForm(false)}>
-                        Fechar
-                    </Button>
-                    <Button variant="success" type="submit">
-                        Salvar
-                    </Button>
-                </Modal.Footer>
-            </form>
-        </Modal>
-    )
+        </Dialogo>
+    );
 }
 
 export default FormMusica;

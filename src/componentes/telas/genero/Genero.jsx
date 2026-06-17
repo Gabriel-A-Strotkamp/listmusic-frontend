@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import GeneroContext from './GeneroContext';
 import Formulario from './FormularioGenero';
+import Tabela from './TabelaGenero';
+import Carregando from '../../comuns/Carregando';
 import WithAuth from "../../../seguranca/WithAuth";
 import { useNavigate } from "react-router-dom";
 
@@ -11,14 +13,13 @@ import {
     cadastraGeneroAPI
 } from '../../../servicos/GeneroServicos';
 
-import Tabela from './TabelaGenero';
-
 function Genero() {
 
     const navigate = useNavigate();
 
     const [alerta, setAlerta] = useState({ status: "", message: "" });
     const [listaObjetos, setListaObjetos] = useState([]);
+    const [carregando, setCarregando] = useState(true);
 
     const [editar, setEditar] = useState(false);
     const [exibirForm, setExibirForm] = useState(false);
@@ -30,10 +31,13 @@ function Genero() {
 
     const recuperaGeneros = async () => {
         try {
+            setCarregando(true);
             setListaObjetos(await getGenerosAPI());
         } catch (err) {
             console.error("Erro ao recuperar gêneros:", err);
             navigate("/login", { replace: true });
+        } finally {
+            setCarregando(false);
         }
     };
 
@@ -58,10 +62,12 @@ function Genero() {
 
     const novoObjeto = () => {
         setEditar(false);
+
         setObjeto({
             id_genero: 0,
             descricao: ""
         });
+
         setExibirForm(true);
     };
 
@@ -101,7 +107,6 @@ function Genero() {
             });
 
             setExibirForm(false);
-
             recuperaGeneros();
 
         } catch (err) {
@@ -110,8 +115,9 @@ function Genero() {
         }
     };
 
-    const handleChange = e => {
+    const handleChange = (e) => {
         const { name, value } = e.target;
+
         setObjeto({
             ...objeto,
             [name]: value
@@ -139,7 +145,10 @@ function Genero() {
             }}
         >
             <Formulario />
-            <Tabela />
+
+            <Carregando carregando={carregando}>
+                <Tabela />
+            </Carregando>
         </GeneroContext.Provider>
     );
 }

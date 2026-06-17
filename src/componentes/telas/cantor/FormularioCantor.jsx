@@ -1,64 +1,93 @@
-import { useContext } from 'react'
+import { useContext } from 'react';
 import Alerta from '../../comuns/Alerta';
 import CantorContext from './CantorContext';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
-import Form from 'react-bootstrap/Form';
-import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Col from 'react-bootstrap/Col';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
+import CampoEntrada from '../../comuns/CampoEntrada';
+import Dialogo from '../../comuns/Dialogo';
 
 function FormCantor() {
 
-    const { objeto, handleChange, acaoCadastrar, alerta, exibirForm, setExibirForm } = useContext(CantorContext);
+    const {
+        objeto,
+        handleChange,
+        acaoCadastrar,
+        alerta,
+        exibirForm,
+        setExibirForm
+    } = useContext(CantorContext);
+
     return (
-        <Modal show={exibirForm} onHide={() => setExibirForm(false)}>
-            <Modal.Header closeButton>
-                <Modal.Title>Cantor</Modal.Title>
-            </Modal.Header>
+        <Dialogo
+            id="modalEdicao"
+            titulo="Cantor"
+            idform="formulario"
+            acaoCadastrar={acaoCadastrar}
+            exibirForm={exibirForm}
+            setExibirForm={setExibirForm}
+        >
 
-            <form onSubmit={acaoCadastrar}>
-                <Modal.Body>
-                    <Container>
-                        <Row>
-                            <Alerta alerta={alerta} />
+            <Alerta alerta={alerta} />
 
-                            <Col md={12}>
-                                <FloatingLabel label="ID" className="mb-3">
-                                    <Form.Control readOnly name="id_cantor" value={objeto.id_cantor}/>
-                                </FloatingLabel>
-                            </Col>
+            <Col xs={12} md={12}>
+                <CampoEntrada
+                    value={objeto.id_cantor}
+                    id="txtIdCantor"
+                    name="id_cantor"
+                    label="ID"
+                    tipo="number"
+                    onchange={handleChange}
+                    readonly={true}
+                    maxCaracteres={10}
+                />
+            </Col>
 
-                            <Col md={12}>
-                                <FloatingLabel label="Nome" className="mb-3">
-                                    <Form.Control required name="nome" value={objeto.nome} onChange={handleChange}/>
-                                </FloatingLabel>
-                            </Col>
+            <Col xs={12} md={12}>
+                <CampoEntrada
+                    value={objeto.nome}
+                    id="txtNome"
+                    name="nome"
+                    label="Nome"
+                    tipo="text"
+                    onchange={handleChange}
+                    msgvalido="Nome informado"
+                    msginvalido="Informe o nome do cantor"
+                    requerido={true}
+                    readonly={false}
+                    maxCaracteres={100}
+                />
+            </Col>
 
-                            <Col md={6}>
-                                <FloatingLabel label="Data de Nascimento" className="mb-3">
-                                    <Form.Control type="date" name="data_nascimento" value={objeto.data_nascimento} onChange={handleChange}/>
-                                </FloatingLabel>
-                            </Col>
+            <Col xs={12} md={6}>
+                <CampoEntrada
+                    value={objeto.data_nascimento}
+                    id="txtDataNascimento"
+                    name="data_nascimento"
+                    label="Data de Nascimento"
+                    tipo="date"
+                    onchange={handleChange}
+                    requerido={false}
+                    readonly={false}
+                />
+            </Col>
 
-                            <Col md={6}>
-                                <FloatingLabel label="Nacionalidade" className="mb-3">
-                                    <Form.Control name="nacionalidade" value={objeto.nacionalidade} onChange={handleChange}/>
-                                </FloatingLabel>
-                            </Col>
+            <Col xs={12} md={6}>
+                <CampoEntrada
+                    value={objeto.nacionalidade}
+                    id="txtNacionalidade"
+                    name="nacionalidade"
+                    label="Nacionalidade"
+                    tipo="text"
+                    onchange={handleChange}
+                    msgvalido="Nacionalidade informada"
+                    msginvalido="Informe a nacionalidade"
+                    requerido={false}
+                    readonly={false}
+                    maxCaracteres={50}
+                />
+            </Col>
 
-                        </Row>
-                    </Container>
-                </Modal.Body>
-
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setExibirForm(false)}>Fechar</Button>
-                    <Button variant="success" type="submit">Salvar</Button>
-                </Modal.Footer>
-            </form>
-        </Modal>
-    )
+        </Dialogo>
+    );
 }
 
 export default FormCantor;

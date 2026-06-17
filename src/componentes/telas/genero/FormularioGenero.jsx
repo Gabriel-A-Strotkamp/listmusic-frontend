@@ -1,53 +1,64 @@
-import { useContext } from 'react'
+import { useContext } from 'react';
 import Alerta from '../../comuns/Alerta';
 import GeneroContext from './GeneroContext';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
-import Form from 'react-bootstrap/Form';
-import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Col from 'react-bootstrap/Col';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
+import CampoEntrada from '../../comuns/CampoEntrada';
+import Dialogo from '../../comuns/Dialogo';
 
 function FormGenero() {
 
-    const { objeto, handleChange, acaoCadastrar, alerta, exibirForm, setExibirForm } = useContext(GeneroContext);
+    const {
+        objeto,
+        handleChange,
+        acaoCadastrar,
+        alerta,
+        exibirForm,
+        setExibirForm
+    } = useContext(GeneroContext);
 
     return (
-        <Modal show={exibirForm} onHide={() => setExibirForm(false)}>
-            <Modal.Header closeButton>
-                <Modal.Title>Gênero</Modal.Title>
-            </Modal.Header>
+        <Dialogo
+            id="modalEdicao"
+            titulo="Gênero"
+            idform="formulario"
+            acaoCadastrar={acaoCadastrar}
+            exibirForm={exibirForm}
+            setExibirForm={setExibirForm}
+        >
 
-            <form onSubmit={acaoCadastrar}>
-                <Modal.Body>
-                    <Container>
-                        <Row>
-                            <Alerta alerta={alerta} />
+            <Alerta alerta={alerta} />
 
-                            <Col md={12}>
-                                <FloatingLabel label="ID" className="mb-3">
-                                    <Form.Control readOnly name="id_genero" value={objeto.id_genero}/>
-                                </FloatingLabel>
-                            </Col>
+            <Col xs={12} md={12}>
+                <CampoEntrada
+                    value={objeto.id_genero}
+                    id="txtIdGenero"
+                    name="id_genero"
+                    label="ID"
+                    tipo="number"
+                    onchange={handleChange}
+                    readonly={true}
+                    maxCaracteres={10}
+                />
+            </Col>
 
-                            <Col md={12}>
-                                <FloatingLabel label="Descrição" className="mb-3">
-                                    <Form.Control required name="descricao" value={objeto.descricao} onChange={handleChange}/>
-                                </FloatingLabel>
-                            </Col>
+            <Col xs={12} md={12}>
+                <CampoEntrada
+                    value={objeto.descricao}
+                    id="txtDescricao"
+                    name="descricao"
+                    label="Descrição"
+                    tipo="text"
+                    onchange={handleChange}
+                    msgvalido="Descrição informada"
+                    msginvalido="Informe a descrição do gênero"
+                    requerido={true}
+                    readonly={false}
+                    maxCaracteres={100}
+                />
+            </Col>
 
-                        </Row>
-                    </Container>
-                </Modal.Body>
-
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setExibirForm(false)}>Fechar</Button>
-                    <Button variant="success" type="submit">Salvar</Button>
-                </Modal.Footer>
-            </form>
-        </Modal>
-    )
+        </Dialogo>
+    );
 }
 
 export default FormGenero;

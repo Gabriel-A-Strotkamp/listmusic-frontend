@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import MusicaContext from './MusicaContext';
 import FormMusica from './FormularioMusica';
 import Tabela from './TabelaMusica';
+import Carregando from '../../comuns/Carregando';
 import WithAuth from "../../../seguranca/WithAuth";
 import { useNavigate } from "react-router-dom";
 
@@ -24,6 +25,7 @@ function Musica() {
 
     const [alerta, setAlerta] = useState({ status: "", message: "" });
     const [listaObjetos, setListaObjetos] = useState([]);
+    const [carregando, setCarregando] = useState(true);
 
     const [editar, setEditar] = useState(false);
     const [exibirForm, setExibirForm] = useState(false);
@@ -51,11 +53,16 @@ function Musica() {
 
     const recuperaMusicas = async () => {
         try {
+            setCarregando(true);
+
             const dados = await getMusicasAPI();
             setListaObjetos(dados);
+
         } catch (err) {
             console.error("Erro ao recuperar músicas:", err);
             navigate("/login", { replace: true });
+        } finally {
+            setCarregando(false);
         }
     };
 
@@ -157,7 +164,7 @@ function Musica() {
     };
 
     // =========================
-    // CARREGAR RELACIONAMENTOS
+    // DADOS RELACIONADOS
     // =========================
 
     const carregarDadosRelacionados = async () => {
@@ -211,7 +218,13 @@ function Musica() {
                 listaGravadoras
             }}
         >
-            {exibirForm ? <FormMusica /> : <Tabela />}
+            {exibirForm ? (
+                <FormMusica />
+            ) : (
+                <Carregando carregando={carregando}>
+                    <Tabela />
+                </Carregando>
+            )}
         </MusicaContext.Provider>
     );
 }

@@ -7,7 +7,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css'
 // Componentes base
 import MenuPublico from './componentes/MenuPublico';
 import MenuPrivado from './componentes/MenuPrivado';
-import login from './componentes/telas/login/Login';
+import Login from './componentes/telas/login/Login';
 
 // Telas do projeto
 import Home from './componentes/telas/Home';
@@ -33,7 +33,7 @@ const router = createBrowserRouter([
         element : <Sobre/>
       }	,  
       {
-        path : "login",
+        path : "/login",
         element :  <Login/>
       }              
     ]

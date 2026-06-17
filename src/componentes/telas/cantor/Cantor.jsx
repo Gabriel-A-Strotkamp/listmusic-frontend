@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import CantorContext from './CantorContext';
 import TabelaCantor from './TabelaCantor';
 import FormCantor from './FormularioCantor';
+import Carregando from '../../comuns/Carregando';
 import WithAuth from "../../../seguranca/WithAuth";
 import { useNavigate } from "react-router-dom";
 
@@ -18,6 +19,7 @@ function Cantor() {
 
     const [alerta, setAlerta] = useState({ status: "", message: "" });
     const [listaObjetos, setListaObjetos] = useState([]);
+    const [carregando, setCarregando] = useState(true);
 
     const [editar, setEditar] = useState(false);
     const [exibirForm, setExibirForm] = useState(false);
@@ -31,10 +33,15 @@ function Cantor() {
 
     const recuperaCantores = async () => {
         try {
+            setCarregando(true);
+
             setListaObjetos(await getCantoresAPI());
+
         } catch (err) {
             console.error("Erro ao recuperar cantores:", err);
             navigate("/login", { replace: true });
+        } finally {
+            setCarregando(false);
         }
     };
 
@@ -59,12 +66,14 @@ function Cantor() {
 
     const novoObjeto = () => {
         setEditar(false);
+
         setObjeto({
             id_cantor: 0,
             nome: "",
             data_nascimento: "",
             nacionalidade: ""
         });
+
         setExibirForm(true);
     };
 
@@ -144,7 +153,13 @@ function Cantor() {
                 setExibirForm
             }}
         >
-            {exibirForm ? <FormCantor /> : <TabelaCantor />}
+            {exibirForm ? (
+                <FormCantor />
+            ) : (
+                <Carregando carregando={carregando}>
+                    <TabelaCantor />
+                </Carregando>
+            )}
         </CantorContext.Provider>
     );
 }

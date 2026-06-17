@@ -1,59 +1,80 @@
-import { useContext } from 'react'
+import { useContext } from 'react';
 import Alerta from '../../comuns/Alerta';
 import GravadoraContext from './GravadoraContext';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
-import Form from 'react-bootstrap/Form';
-import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Col from 'react-bootstrap/Col';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
+import CampoEntrada from '../../comuns/CampoEntrada';
+import Dialogo from '../../comuns/Dialogo';
 
 function FormGravadora() {
 
-    const { objeto, handleChange, acaoCadastrar, alerta, exibirForm, setExibirForm } = useContext(GravadoraContext);
+    const {
+        objeto,
+        handleChange,
+        acaoCadastrar,
+        alerta,
+        exibirForm,
+        setExibirForm
+    } = useContext(GravadoraContext);
 
     return (
-        <Modal show={exibirForm} onHide={() => setExibirForm(false)}>
-            <Modal.Header closeButton>
-                <Modal.Title>Gravadora</Modal.Title>
-            </Modal.Header>
+        <Dialogo
+            id="modalEdicao"
+            titulo="Gravadora"
+            idform="formulario"
+            acaoCadastrar={acaoCadastrar}
+            exibirForm={exibirForm}
+            setExibirForm={setExibirForm}
+        >
 
-            <form onSubmit={acaoCadastrar}>
-                <Modal.Body>
-                    <Container>
-                        <Row>
-                            <Alerta alerta={alerta} />
+            <Alerta alerta={alerta} />
 
-                            <Col md={12}>
-                                <FloatingLabel label="ID" className="mb-3">
-                                    <Form.Control readOnly name="id_gravadora" value={objeto.id_gravadora}/>
-                                </FloatingLabel>
-                            </Col>
+            <Col xs={12} md={12}>
+                <CampoEntrada
+                    value={objeto.id_gravadora}
+                    id="txtIdGravadora"
+                    name="id_gravadora"
+                    label="ID"
+                    tipo="number"
+                    onchange={handleChange}
+                    readonly={true}
+                    maxCaracteres={10}
+                />
+            </Col>
 
-                            <Col md={12}>
-                                <FloatingLabel label="Nome" className="mb-3">
-                                    <Form.Control required name="nome" value={objeto.nome} onChange={handleChange}/>
-                                </FloatingLabel>
-                            </Col>
+            <Col xs={12} md={12}>
+                <CampoEntrada
+                    value={objeto.nome}
+                    id="txtNome"
+                    name="nome"
+                    label="Nome"
+                    tipo="text"
+                    onchange={handleChange}
+                    msgvalido="Nome informado"
+                    msginvalido="Informe o nome da gravadora"
+                    requerido={true}
+                    readonly={false}
+                    maxCaracteres={100}
+                />
+            </Col>
 
-                            <Col md={12}>
-                                <FloatingLabel label="País" className="mb-3">
-                                    <Form.Control name="pais" value={objeto.pais} onChange={handleChange}/>
-                                </FloatingLabel>
-                            </Col>
+            <Col xs={12} md={12}>
+                <CampoEntrada
+                    value={objeto.pais}
+                    id="txtPais"
+                    name="pais"
+                    label="País"
+                    tipo="text"
+                    onchange={handleChange}
+                    msgvalido="País informado"
+                    msginvalido="Informe o país da gravadora"
+                    requerido={false}
+                    readonly={false}
+                    maxCaracteres={50}
+                />
+            </Col>
 
-                        </Row>
-                    </Container>
-                </Modal.Body>
-
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={() => setExibirForm(false)}>Fechar</Button>
-                    <Button variant="success" type="submit">Salvar</Button>
-                </Modal.Footer>
-            </form>
-        </Modal>
-    )
+        </Dialogo>
+    );
 }
 
 export default FormGravadora;

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import GravadoraContext from './GravadoraContext';
 import Formulario from './FormularioGravadora';
 import Tabela from './TabelaGravadora';
+import Carregando from '../../comuns/Carregando';
 import WithAuth from "../../../seguranca/WithAuth";
 import { useNavigate } from "react-router-dom";
 
@@ -18,6 +19,7 @@ function Gravadora() {
 
     const [alerta, setAlerta] = useState({ status: "", message: "" });
     const [listaObjetos, setListaObjetos] = useState([]);
+    const [carregando, setCarregando] = useState(true);
 
     const [editar, setEditar] = useState(false);
     const [exibirForm, setExibirForm] = useState(false);
@@ -30,10 +32,15 @@ function Gravadora() {
 
     const recuperaGravadoras = async () => {
         try {
+            setCarregando(true);
+
             setListaObjetos(await getGravadorasAPI());
+
         } catch (err) {
             console.error("Erro ao recuperar gravadoras:", err);
             navigate("/login", { replace: true });
+        } finally {
+            setCarregando(false);
         }
     };
 
@@ -144,7 +151,10 @@ function Gravadora() {
             }}
         >
             <Formulario />
-            <Tabela />
+
+            <Carregando carregando={carregando}>
+                <Tabela />
+            </Carregando>
         </GravadoraContext.Provider>
     );
 }
